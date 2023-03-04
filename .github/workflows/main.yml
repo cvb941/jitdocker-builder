@@ -10,7 +10,7 @@ on:
       branch:
         description: "Git Branch to build"
         type: text
-        required: true
+        required: false
 
 jobs:
   docker:
@@ -38,5 +38,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
+          context: "https://github.com/${{ inputs.githubRepo }}.git#{{ inputs.branch }}"
           push: true
           tags: jitdockerio/${{ steps.gitParse.outputs.owner }}.${{ steps.gitParse.outputs.name }}:${{ inputs.branch }}
