@@ -5,14 +5,23 @@ on:
     inputs:
       githubRepo:
         description: "Github Repository to build (owner/name)"
-        type: text
+        type: string
         required: true
       branch:
         description: "Git Branch to build"
-        type: text
+        type: string
+        required: false
+      id:
+        description: "Run identifier (for status checks)"
         required: false
 
 jobs:
+  id:
+    name: Workflow ID Provider
+    runs-on: ubuntu-latest
+    steps:
+      - name: ${{ github.event.inputs.id }}
+        run: echo run identifier ${{ inputs.id }}
   docker:
     runs-on: ubuntu-latest
     steps:
