@@ -45,3 +45,4 @@ jobs:
           context: "https://github.com/${{ inputs.githubRepo }}.git#refs/heads/${{ inputs.branch }}"
           push: true
           tags: jitdockerio/${{ steps.gitParse.outputs.owner }}.${{ steps.gitParse.outputs.name }}:${{ inputs.branch }}
+          provenance: false
