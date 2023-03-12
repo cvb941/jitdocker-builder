@@ -68,7 +68,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: "https://github.com/${{ inputs.githubRepo }}.git#refs/heads/${{ inputs.branch != '' & inputs.branch | steps.repo_x.outputs.default_branch }}"
+          context: "https://github.com/${{ inputs.githubRepo }}.git#refs/heads/${{ inputs.branch != '' && inputs.branch || steps.repo_x.outputs.default_branch }}"
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
