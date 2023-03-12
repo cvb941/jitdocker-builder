@@ -46,7 +46,7 @@ jobs:
           url: https://github.com/${{ inputs.githubRepo }}
       - name: Docker meta
         id: meta
-        uses: escemi-tech/metadata-action@ca64f41
+        uses: escemi-tech/metadata-action@ca64f41dd391382ec9c7fc5f8a0a1a7d26664257
         with:
           images: |
             jitdockerio/${{ steps.gitParse.outputs.owner }}.${{ steps.gitParse.outputs.name }}
