@@ -40,7 +40,7 @@ jobs:
       - name: Check if requested commit is the same as latest
         run: |
           echo "requested_commit=$(git rev-parse HEAD)" >> $GITHUB_ENV
-          if [ ${{ env.latest_commit }} == ${{ env.requested_commit }} ]; then
+          if [ ${{ env.latest_commit }} == $(git rev-parse HEAD) ]; then
             echo "requested_commit_is_latest=true" >> $GITHUB_ENV
           else
             echo "requested_commit_is_latest=false" >> $GITHUB_ENV
