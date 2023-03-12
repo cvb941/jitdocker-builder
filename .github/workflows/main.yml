@@ -25,6 +25,11 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3.3.0
+        with:
+          repository: ${{ inputs.githubUrl }}
+          ref: ${{ inputs.branch }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -39,9 +44,23 @@ jobs:
         uses: theowenyoung/git-url-parse@v1
         with:
           url: https://github.com/${{ inputs.githubRepo }}
+      - name: Docker meta
+        id: meta
+        uses: escemi-tech/metadata-action
+        with:
+          images: |
+            jitdockerio/${{ steps.gitParse.outputs.owner }}.${{ steps.gitParse.outputs.name }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+          context: git
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
           context: "https://github.com/${{ inputs.githubRepo }}.git#refs/heads/${{ inputs.branch }}"
           push: true
-          tags: jitdockerio/${{ steps.gitParse.outputs.owner }}.${{ steps.gitParse.outputs.name }}:${{ inputs.branch }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
