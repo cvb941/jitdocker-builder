@@ -25,11 +25,22 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout latest
+        uses: actions/checkout@v3.3.0
+        with:
+          repository: ${{ inputs.githubRepo }}
+      - name: Save latest commit of default branch
+        run: |
+          echo "latest_commit=$(git rev-parse HEAD)" >> $GITHUB_ENV
+      - name: Checkout requested
         uses: actions/checkout@v3.3.0
         with:
           repository: ${{ inputs.githubRepo }}
           ref: ${{ inputs.branch }}
+      - name: Check if requested commit is the same as latest
+        run: |
+          echo "requested_commit=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          echo "requested_commit_is_latest=$(test ${{ env.latest_commit }} = ${{ env.requested_commit }} && echo true || echo false)" >> $GITHUB_ENV
       - name: Fetch Git tags
         run: git fetch --tags origin
       - name: Set up QEMU
@@ -59,7 +70,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=sha
-            type=raw,value=latest,enable=${{ inputs.branch == '' }}
+            type=raw,value=latest,enable=${{ env.requested_commit_is_latest }}
           context: git
       - name: Build and push
         uses: docker/build-push-action@v4
