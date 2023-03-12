@@ -30,6 +30,8 @@ jobs:
         with:
           repository: ${{ inputs.githubRepo }}
           ref: ${{ inputs.branch }}
+      - name: Fetch Git tags
+        run: git fetch --tags origin
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
